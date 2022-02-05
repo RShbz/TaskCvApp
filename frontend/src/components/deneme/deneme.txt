@@ -1,0 +1,241 @@
+const theme = createTheme({
+    palette: {
+      background: {
+        paper: '#fff',
+      },
+      text: {
+        primary: '#173A5E',
+        secondary: '#46505A',
+      },
+      action: {
+        active: '#001E3C',
+      },
+      success: {
+        dark: '#009688',
+      },
+    },
+  });
+  
+  export default function Home() {
+    return (
+      <ThemeProvider theme={theme}>
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            boxShadow: 1,
+            borderRadius: 2,
+            p: 2,
+            minWidth: 300,
+          }}
+        >
+          <Box sx={{ color: 'text.primary' }}>Sessions</Box>
+          <Box sx={{ color: 'text.secondery', fontSize: 56, fontWeight: 'medium' }}>
+            98.3 K
+          </Box>
+          <Box
+            sx={{
+              color: 'success.dark',
+              display: 'inline',
+              fontWeight: 'bold',
+              mx: 0.5,
+              fontSize: 14,
+            }}
+          >
+            +18.77%
+          </Box>
+          <Box sx={{ color: 'text.secondary', display: 'inline', fontSize: 14 }}>
+            vs. last week
+          </Box>
+        </Box>
+      </ThemeProvider>
+
+      /////////
+      signup
+      import React from "react";
+import reactDom from "react-dom";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import axios from "axios";
+import { Button, TextField } from "@mui/material";
+
+
+export default function UserSignUp() {
+
+  const [name,SetName]=React.useState('');
+  const [surname,SetSurname]=React.useState('');
+  const [email,SetEmail]=React.useState('');
+  const [password,SetPassword]=React.useState('');
+
+ function handleClick(e){
+
+const body={
+  name:name,
+  surname:surname,
+  password:password,
+  email:email
+};
+axios.post('/users/add',body)
+.then( alert("Kayıdınız Oluştu.."));
+
+ }
+
+
+  return (
+    <Grid  
+        container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent=""
+  
+     
+      sx={{
+       
+        gap: 1,
+        gridTemplateColumns: "repeat(1, 1fr)",
+        width: "18rem",
+        marginLeft:'5rem',
+        border: 0.1,
+        borderColor: "#bbdefb",
+        boxShadow: 2,
+        bgcolor: (theme) =>
+          theme.palette.mode === "blue" ? "#10778" : '#6e0e0e0',  
+        color: (theme) =>
+          theme.palette.mode === "dark" ? "#e3f2fd" : "#e3442fd"
+      }}
+    >
+      <p fontSize= "15ch"> Yeni Üye Kayıt</p>
+      <Box
+        sx={{ 
+          bgcolor: (theme) =>
+          theme.palette.mode === "blue" ? "#10778" : '#fff',
+       
+          boxShadow: 2,
+          width: "15rem",
+          height: "3.5rem",
+          p: 1,
+          m: 1,
+          borderRadius: 2,
+          textAlign: "center"
+        }}
+      >
+        <TextField 
+          size="small"   name="name" onChange={(event)=>SetName(event.target.value)} label="Adınız" color="primary" focused fullWidth  />
+      </Box>
+      
+      <Box
+        sx={{
+          boxShadow: 2,
+          width: "15rem",
+          height: "3.5rem",
+          p: 1,
+          m: 1,
+          borderRadius: 2,
+          textAlign: "center"
+        }}
+      >
+        <TextField
+          size="small"  name="surname" onChange={(event)=>SetSurname(event.target.value)}  label="Soyadınız" color="primary" focused fullWidth  />
+      </Box>
+
+      <Box
+        sx={{
+          boxShadow: 2,
+          width: "15rem",
+          height: "3.5rem",
+          p: 1,
+          m: 1,
+          borderRadius: 2,
+          textAlign: "center"
+        }}
+      >
+        <TextField
+          size="small"  name="email" onChange={(event)=>SetEmail(event.target.value)}  label="E-mail" color="primary" focused fullWidth  />
+      </Box>
+
+      <Box
+        sx={{
+          boxShadow: 2,
+          width: "15rem",
+          height: "3.5rem",
+          p: 1,
+          m: 1,
+          borderRadius: 2,
+          textAlign: "center"
+        }}
+      >
+        <TextField
+          size="small" name="password"  onChange={(event)=>SetPassword(event.target.value)}label="Şifre" color="primary" focused fullWidth  />
+      </Box>
+      <Button
+        variant="text" onClick={handleClick} 
+        sx={{ border: 2, marginLeft: 1, marginBottom: 2, height: 1, p: 0.5 }}
+      >
+        Kaydet
+      </Button>
+    </Grid>
+    
+  );
+}
+/////
+
+<Router>
+     <Routes>
+   <Route   exact  path="/UserSignUp"  element={<UserSignUp/>} />
+   <Route   exact  path="/UserSignIn"  element={<UserSignIn/>} />
+   </Routes>
+   </Router>
+
+
+///////////
+import { wait } from "@testing-library/user-event/dist/utils";
+import React,{useState,useEffect} from "react";
+import ReactDom from "react-dom";
+
+export default function Admin(){
+const[error,setError]=useState(null);
+const[isLoad,setIsLoad]=useState(false);
+const[adminList,setAdmin]=useState([]);
+
+useEffect(()=>{ 
+    fetch("/admins/getAll")
+        .then(res=>res.json())
+        .then((result)=>{ setIsLoad(true); setAdmin(result);},
+             (error)=>{   setIsLoad(true);setError(error);  }
+             )
+
+            },
+            []);
+
+
+    if(error){ return <div> error</div>;}
+    else if(!isLoad){ return <div> Loading</div>;}
+    else{ 
+            return (
+                  <div>
+                        {adminList.map(list=>(
+                             
+                             
+                       
+                                        <div className="navbar">
+                                        
+                                        <div>
+                                   <br/>ADI: {list.name}
+                                   </div>   <div>
+                                        <div>
+                                   <br/>SOYADI: {list.sname}
+                                   </div>
+                                   <br/>ŞİFRE: {list.password}
+                                   <p/></div>
+
+                                </div>
+                               
+
+                        ))}
+                        
+                        </div> 
+                        
+                        );
+    }
+}
+///////////
